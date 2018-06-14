@@ -1,7 +1,7 @@
 import React from 'react';
 import './Piano.css';
 
-const Key = (props) => 
+const Key = (props) =>
   <div
     className={`Key-container ${props.color}`}
     onClick={props.onPress.bind(null, props.keyNames)}
@@ -23,14 +23,19 @@ const Octave = (props) =>
     <Key {...props} color='white' keyNames={['B']} />
   </div>
 
-const Piano = (props) => 
-  <div className="Piano-container">
-    {Array(props.numOctaves).fill().map((element, octave) => 
-      <Octave
-        key={`Octave-${octave}`}
-        onPress={props.onPress.bind(null, octave)}
-      />
-    )}
-  </div>
+class Piano extends PureComponent {
+  render() {
+    return (
+      <div className="Piano-container">
+        {Array(props.numOctaves).fill().map((element, octave) =>
+          <Octave
+            key={`Octave-${octave}`}
+            onPress={props.onPress.bind(null, octave)}
+          />
+        )}
+      </div>
+    );
+  }
+}
 
 export default Piano;
