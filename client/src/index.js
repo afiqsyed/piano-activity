@@ -6,15 +6,16 @@ import registerServiceWorker from './registerServiceWorker';
 
 const NOTE_URL = 'http://localhost:5000/note';
 
-const fetchNextNote = () => 
-  fetch(NOTE_URL).then(response => response.json());
+const fetchNextNote = (sequence_number) => 
+  fetch(NOTE_URL + '/' + sequence_number).then(response => response.json());
 
-const checkAnswer = (answer) => 
-  fetch(NOTE_URL, {
+const checkAnswer = (sequence_number, answer) => 
+  fetch(NOTE_URL + '/' + sequence_number, {
     body: JSON.stringify(answer),
     cache: 'no-cache',
     headers: {
-      'content-type': 'application/json'
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
     },
     method: 'POST'
   }).then(response => response.json());

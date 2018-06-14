@@ -1,25 +1,44 @@
 import os
+import sqlite3
 from flask import Flask, request, render_template, send_from_directory, jsonify
+
 app = Flask(__name__, static_folder=None)
 
 CLIENT_FOLDER = os.path.abspath('../client/build')
+DATABASE_LOCATION = os.path.abspath('../server/data.db')
+TRACK_ID = 0
 
 @app.route('/')
-def welcome():
+def welcome():    
     return render_template('welcome.html')
 
-@app.route('/note', methods=['GET', 'POST'])
-def note():
+@app.route('/note/<int:sequence>', methods=['GET', 'POST'])
+def note(sequence):
+    database_connection = sqlite3.connect(DATABASE_LOCATION)
+    cursor = database_connection.cursor()
+    
+    noteName = list(cursor.execute(
+        'SELECT notename FROM notes WHERE track=? AND sequence=?',
+        (TRACK_ID, sequence)
+    ))[0][0]
+
+    print(TRACK_ID, sequence, noteName)
+
+    hasNextNote = len(list(cursor.execute(
+        'SELECT notename FROM notes WHERE track=? AND sequence=?',
+        (TRACK_ID, sequence + 1)
+    ))) == 1
+
     result = None
 
     if request.method == 'POST':
         notes = request.get_json()
-        if 'C#' in notes:
+        if noteName in notes:
             result = True
         else:
             result = False
     else:
-        result = {'note': 'C#'}
+        result = {'note': noteName, 'next': sequence + 1 if hasNextNote else None}
     
     return jsonify(result)
 

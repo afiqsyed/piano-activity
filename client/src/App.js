@@ -7,19 +7,31 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentNote: null
+      currentNote: null,
+      currentSeq: 0,
+      nextSeq: 0
     }
 
-    this.props.fetchNextNote().then((data) => {
-      this.setState({currentNote: data.note});
+    this.props.fetchNextNote(this.state.nextSeq).then((data) => {
+      this.setState({currentNote: data.note, currentSeq: this.state.nextSeq, nextSeq: data.next});
     }).catch((err) => {
       this.setState({error: 'Unable to connect to the server'});
     });
   }
 
   onPress = (octave, keyNames) => {
-    this.props.checkAnswer(keyNames).then((data) => {
-      console.log(data);
+    this.props.checkAnswer(this.state.currentSeq, keyNames).then((isCorrect) => {
+      if (isCorrect) {
+        if (!this.state.nextSeq) {
+          alert('Done!');
+        } else {
+          this.props.fetchNextNote(this.state.nextSeq).then((data) => {
+            this.setState({currentNote: data.note, currentSeq: this.state.nextSeq, nextSeq: data.next});
+          });
+        }
+      } else {
+        alert('Wrong Note');
+      }
     });
   }
 
