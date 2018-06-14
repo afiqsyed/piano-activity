@@ -2,7 +2,9 @@ import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import './Piano.css';
 
-/* global $ */ // Remove pesky warnings about jquery being undefined...
+/* global Pizzicato $ */ // Remove pesky warnings about jquery being undefined...
+
+const MIDDLE_C = 261;
 
 const Key = (props) =>
   <div
@@ -29,8 +31,27 @@ class Piano extends PureComponent {
   componentDidMount() {
     // Do a cool effect when you press the F# key
     $(ReactDOM.findDOMNode(this)).on('click', '.Key-container', (event) => {
-      const $element = $(event.currentTarget);
-      console.log('GOT THERE');
+      const $key = $(event.currentTarget);
+      const $octave = $key.parent();
+      const octave = $octave.index();
+      const note = $key.index();
+      console.log(octave, note);
+      const freq = MIDDLE_C * Math.pow(2, octave) * Math.pow(2, note / 12);
+      console.log(freq);
+
+      var sineWave = new Pizzicato.Sound({
+        source: 'wave',
+        options: {
+            frequency: freq
+        }
+      });
+
+      sineWave.play();
+
+      setTimeout(() => {
+        sineWave.stop();
+      }, 500);
+
     });
   }
   render() {
