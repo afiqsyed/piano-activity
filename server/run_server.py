@@ -20,7 +20,7 @@ def note():
             result = False
     else:
         result = {'note': 'C#'}
-    
+
     return jsonify(result)
 
 @app.route('/piano/', methods=['GET'])

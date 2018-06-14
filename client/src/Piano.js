@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
+import ReactDOM from 'react-dom';
 import './Piano.css';
+
+/* global $ */ // Remove pesky warnings about jquery being undefined...
 
 const Key = (props) =>
   <div
     className={`Key-container ${props.color}`}
-    onClick={props.onPress.bind(null, props.keyNames)}
   ></div>
 
 const Octave = (props) =>
@@ -24,13 +26,20 @@ const Octave = (props) =>
   </div>
 
 class Piano extends PureComponent {
+  componentDidMount() {
+    // Do a cool effect when you press the F# key
+    $(ReactDOM.findDOMNode(this)).on('click', '.Key-container', (event) => {
+      const $element = $(event.currentTarget);
+      console.log('GOT THERE');
+    });
+  }
   render() {
     return (
       <div className="Piano-container">
-        {Array(props.numOctaves).fill().map((element, octave) =>
+        {Array(this.props.numOctaves).fill().map((element, octave) =>
           <Octave
             key={`Octave-${octave}`}
-            onPress={props.onPress.bind(null, octave)}
+            onPress={this.props.onPress.bind(null, octave)}
           />
         )}
       </div>

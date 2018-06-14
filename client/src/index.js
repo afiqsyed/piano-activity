@@ -2,14 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import registerServiceWorker from './registerServiceWorker';
+// import registerServiceWorker from './registerServiceWorker';
 
 const NOTE_URL = 'http://localhost:5000/note';
 
-const fetchNextNote = () => 
+const fetchNextNote = () =>
   fetch(NOTE_URL).then(response => response.json());
 
-const checkAnswer = (answer) => 
+const checkAnswer = (answer) =>
   fetch(NOTE_URL, {
     body: JSON.stringify(answer),
     cache: 'no-cache',
@@ -26,4 +26,4 @@ ReactDOM.render(
   />,
   document.getElementById('root')
 );
-registerServiceWorker();
+// registerServiceWorker();
