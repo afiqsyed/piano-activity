@@ -38,13 +38,8 @@ def note(sequence):
         else:
             result = False
     else:
-<<<<<<< HEAD
-        result = {'note': 'C#'}
-
-=======
         result = {'note': noteName, 'next': sequence + 1 if hasNextNote else None}
     
->>>>>>> 71d6ec3f6b270badb7dd061969f9546266af81bf
     return jsonify(result)
 
 @app.route('/piano/', methods=['GET'])
